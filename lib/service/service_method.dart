@@ -6,6 +6,7 @@ import '../config/service_url.dart';
 
 
 Future request(url,{formData}) async {
+  print(formData);
   try {
     print('开始获取数据................');
     Response response;
