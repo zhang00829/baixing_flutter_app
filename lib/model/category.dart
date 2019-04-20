@@ -1,7 +1,7 @@
 class CategoryModel {
   String code;
   String message;
-  List<Data> data;
+  List<BigCategoryData> data;
 
   CategoryModel({this.code, this.message, this.data});
 
@@ -9,9 +9,9 @@ class CategoryModel {
     code = json['code'];
     message = json['message'];
     if (json['data'] != null) {
-      data = new List<Data>();
+      data = new List<BigCategoryData>();
       json['data'].forEach((v) {
-        data.add(new Data.fromJson(v));
+        data.add(new BigCategoryData.fromJson(v));
       });
     }
   }
@@ -27,21 +27,21 @@ class CategoryModel {
   }
 }
 
-class Data {
+class BigCategoryData {
   String mallCategoryId;
   String mallCategoryName;
   List<BxMallSubDto> bxMallSubDto;
   Null comments;
   String image;
 
-  Data(
+  BigCategoryData(
       {this.mallCategoryId,
         this.mallCategoryName,
         this.bxMallSubDto,
         this.comments,
         this.image});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  BigCategoryData.fromJson(Map<String, dynamic> json) {
     mallCategoryId = json['mallCategoryId'];
     mallCategoryName = json['mallCategoryName'];
     if (json['bxMallSubDto'] != null) {
