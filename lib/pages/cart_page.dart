@@ -1,48 +1,52 @@
+import 'package:baixing_flutter_app/pages/cart_page/cart_item.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provide/provide.dart';
 
-class CartPage extends StatefulWidget {
-  @override
-  _CartPageState createState() => _CartPageState();
-}
+import '../provide/cart.dart';
+import 'cart_page/cart_bottom.dart';
 
-class _CartPageState extends State<CartPage> {
-  List<String> testList =[];
+class CartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+        appBar: AppBar(
+          title: Text('购物车'),
+        ),
+        body: FutureBuilder(
+          future: _getCartInfo(context),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              List cartList = Provide.value<CartProvide>(context).cartList;
+              return Stack(
+                children: <Widget>[
+                  Provide<CartProvide>(
+                    builder: (context, child, val) {
+                      cartList = Provide.value<CartProvide>(context).cartList;
+                      return ListView.builder(
+                          itemCount: cartList.length,
+                          itemBuilder: (context, index) {
+                            return CartItem(
+                              item: cartList[index],
+                            );
+                          });
+                    },
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    child: CartBottom(),
+                  )
+                ],
+              );
+            } else {
+              return Text('正在加载');
+            }
+          },
+        ));
   }
 
-  //增加
-  void _add()async{
-    SharedPreferences prefs =await SharedPreferences.getInstance();
-
-    String temp = 'jspang是金三胖';
-    testList.add(temp);
-    prefs.setStringList('test', testList);
-    _show();
+  Future<String> _getCartInfo(BuildContext context) async {
+    await Provide.value<CartProvide>(context).getCartInfo();
+    return 'end';
   }
-
-  //查询
-  void _show() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    if(prefs.getStringList('test')!=null){
-      setState(() {
-        testList = prefs.getStringList('test');
-      });
-    }
-  }
-
-  //删除
-  void _clear() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.remove('test');
-    setState(() {
-      testList=[];
-    });
-  }
-
 }
-
-
-

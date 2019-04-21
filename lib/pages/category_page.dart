@@ -5,7 +5,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provide/provide.dart';
 
 import '../model/category.dart';
-import '../provide/category_goods.dart';
 
 class CategoryPage extends StatefulWidget {
   @override
@@ -43,28 +42,34 @@ class LeftCategoryNav extends StatefulWidget {
 }
 
 class _LeftCategoryNavState extends State<LeftCategoryNav> {
-  List list = [];
+
   int listIndex = 0;
 
 
+  @override
+  void didChangeDependencies() {
+    Provide.value<ChildCategory>(context).ajaxGetBigCategoryList();
+    Provide.value<ChildCategory>(context).ajaxGetGoodsList(categorySubId: '');
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
-    Provide.value<ChildCategory>(context).ajaxGetBigCategoryList();
-    Provide.value<ChildCategory>(context).ajaxGetGoodsList(categorySubId: '');
     return Container(
       width: ScreenUtil().setWidth(180),
       decoration: BoxDecoration(
           border: Border(right: BorderSide(width: 1, color: Colors.black12))),
-      child: ListView.builder(
-          itemCount: list.length,
-          itemBuilder: (BuildContext context, index) {
-            return _leftInkWell(index);
-          }),
+      child: Provide<ChildCategory>(builder: (context,child,val){
+        return ListView.builder(
+            itemCount: val.bigCategoryList.length,
+            itemBuilder: (BuildContext context, index) {
+              return _leftInkWell(val.bigCategoryList,index);
+            });
+      }),
     );
   }
 
-  Widget _leftInkWell(int index) {
+  Widget _leftInkWell(List<BigCategoryData> list,int index) {
     return InkWell(
       onTap: () {
         var childList = list[index].bxMallSubDto;
@@ -72,10 +77,10 @@ class _LeftCategoryNavState extends State<LeftCategoryNav> {
         Provide.value<ChildCategory>(context)
             .getChildCategory(childList, categoryId);
         Provide.value<ChildCategory>(context).changeChildIndex(0, '');
+        Provide.value<ChildCategory>(context).ajaxGetGoodsList(categorySubId: '');
         setState(() {
           listIndex = index;
         });
-        Provide.value<ChildCategory>(context).ajaxGetGoodsList(categorySubId: categoryId);
       },
       child: Container(
         height: ScreenUtil().setHeight(100),
@@ -93,10 +98,6 @@ class _LeftCategoryNavState extends State<LeftCategoryNav> {
       ),
     );
   }
-
-
-
-
 }
 
 //右侧分类导航
@@ -167,7 +168,7 @@ class _CategoryGoodsListState extends State<CategoryGoodsList> {
 
   @override
   Widget build(BuildContext context) {
-    return Provide<CategoryGoodsListProvide>(
+    return Provide<ChildCategory>(
         builder: (BuildContext context, child, data) {
       try {
         if (Provide.value<ChildCategory>(context).page == 2) {

@@ -1,5 +1,3 @@
-import 'package:baixing_flutter_app/pages/details_page/detail_explain.dart';
-import 'package:baixing_flutter_app/pages/details_page/details_top_area.dart';
 import 'package:baixing_flutter_app/provide/details_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
