@@ -13,13 +13,17 @@ class ChildCategory with ChangeNotifier{
   //商品列表内容
   List<CategoryGoodsListData> goodsList = [];
 
+  int listIndex = 0;//大类高亮索引
   int childIndex = 0;//子类高亮索引
   String categoryId='4';//大类id
   String subId = '';//小类id
   int page=1;//列表页数
   String noMoreText='';//显示没有数据的文字
 
-
+  //更新大类索引
+  changeBigIndex({int index}){
+    listIndex =index;
+  }
 
   //获取大类导航内容
   ajaxGetBigCategoryList() async{
